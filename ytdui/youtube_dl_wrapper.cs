@@ -18,10 +18,18 @@ namespace ytdui
 
         public void add(string url)
         {
-            Debug.WriteLine(string.Format("Adding '{0}' to downloadlist.", url));
+            Debug.WriteLine($"Adding '{url}' to downloadlist.");
             dl_item d= new dl_item(url);
             urls.Add(d);
             start_download(d);
+            Debug.WriteLine(proxy);
+        }
+        public async void add_async(string url)
+        {
+            Debug.WriteLine($"Adding '{url}' to downloadlist.");
+            dl_item d = new dl_item(url);
+            urls.Add(d);
+            await start_download_async(d);
             Debug.WriteLine(proxy);
         }
 
@@ -41,6 +49,50 @@ namespace ytdui
             }
         }
 
+        public async Task start_download_async(dl_item d)
+        {
+            if (running_threads < max_threads)
+            {
+                running_threads++;
+                d.status &= ~dl_state.notstarted;
+                d.status |= dl_state.running;
+                int r = await download_async(d);
+                if (r != 0)
+                {
+                    d.status |= dl_state.error;
+                }
+                d.status &= ~dl_state.running;
+                running_threads--;
+            }
+        }
+
+        #region Download async
+        private async Task<int> download_async(dl_item d)
+        {
+            TaskCompletionSource<int> ret = new TaskCompletionSource<int>();
+            Process cmd = new Process();
+            cmd.StartInfo.FileName = "youtube-dl.exe";
+            cmd.StartInfo.RedirectStandardInput = true;
+            cmd.StartInfo.RedirectStandardOutput = true;
+            cmd.StartInfo.CreateNoWindow = true;
+            cmd.StartInfo.UseShellExecute = false;
+            cmd.Exited += (s, ea) => ret.SetResult(cmd.ExitCode);
+            cmd.OutputDataReceived += (s, ea) => Debug.WriteLine(ea.Data);
+            if (proxy == "")
+            {
+                cmd.StartInfo.Arguments = d.url;
+            }
+            else
+            {
+                cmd.StartInfo.Arguments = $"--proxy {proxy} {d.url}";
+            }
+            cmd.Start();
+            cmd.BeginOutputReadLine();
+            await ret.Task;
+            return ret.Task.Result;
+        }
+        #endregion
+
         #region Download not async
         public int download(dl_item d)
         {
@@ -56,7 +108,7 @@ namespace ytdui
             {
                 cmd.StartInfo.Arguments = d.url;
             } else {
-                cmd.StartInfo.Arguments = String.Format("--proxy {0} {1}",proxy,d.url);
+                cmd.StartInfo.Arguments = $"--proxy {proxy} {d.url}";
             }
             cmd.Start();
             StreamReader sr = cmd.StandardOutput;
@@ -92,13 +144,13 @@ namespace ytdui
             status = dl_state.notstarted;
             output = new List<string>();
 #if(DEBUG)
-            output.Add(String.Format("Starte youtube-dl für '{0}'...", uri));
+            output.Add($"Starte youtube-dl für '{uri}'...");
 #endif
         }
 
         public override string ToString()
         {
-            return String.Format("{0}: {1}",status.ToString(),url);
+            return $"{status.ToString()}: {url}";
         }
     }
 

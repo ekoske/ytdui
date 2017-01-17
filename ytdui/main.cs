@@ -18,11 +18,7 @@ namespace ytdui
 
         #region Test Kram
         string[] test_links = new string[] {
-            "https://www.vevo.com/watch/taylor-swift/Shake-It-Off/USCJY1431460",
-            "https://www.vevo.com/watch/taylor-swift/Bad-Blood/USCJY1531563",
-            "https://www.vevo.com/watch/grimes/Kill-V-Maim/GB2871500078",
-            "https://www.vevo.com/watch/grimes/Flesh-without-Blood-Life-in-the-Vivid-Dream/GB2871500053",
-            "https://www.vevo.com/watch/mark-forster/Au-Revoir/DEQ321400099",
+            "http://www.vevo.com/watch/bebe-rexha/I-Got-You/USWBV1600722",
             "https://www.youtube.com/watch?v=IcoqJCJlHbQ" };
         #endregion
 
@@ -55,7 +51,10 @@ namespace ytdui
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if(comboBox1.Text!="") dl.add(comboBox1.Text);
+            if (comboBox1.Text != "")
+            {
+                dl.add_async(comboBox1.Text);
+            }
             refresh();
         }
 
