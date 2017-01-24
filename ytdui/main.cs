@@ -9,17 +9,20 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Security;
+using ytdl_sharp;
 
 namespace ytdui
 {
     public partial class main : Form
     {
-        youtube_dl_wrapper dl = new youtube_dl_wrapper();
+        ytdl dl = new ytdl();
 
         #region Test Kram
         string[] test_links = new string[] {
             "http://www.vevo.com/watch/bebe-rexha/I-Got-You/USWBV1600722",
-            "https://www.youtube.com/watch?v=IcoqJCJlHbQ" };
+            "https://www.youtube.com/watch?v=6Mgqbai3fKo",
+            "https://www.youtube.com/watch?v=IcoqJCJlHbQ",
+            "https://www.youtube.com/watch?v=gBAfejjUQoA"};
         #endregion
 
         public main()
@@ -53,7 +56,7 @@ namespace ytdui
         {
             if (comboBox1.Text != "")
             {
-                dl.add_async(comboBox1.Text);
+                dl.add(comboBox1.Text);
             }
             refresh();
         }
@@ -62,7 +65,7 @@ namespace ytdui
         {
             try
             {
-                dl_item t = (sender as ListBox).SelectedValue as dl_item;
+                ytdl_Item t = (sender as ListBox).SelectedValue as ytdl_Item;
                 listBox2.DataSource = null;
                 listBox2.DataSource = t.output;
             } catch { }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
 
-namespace ytdui
+namespace ytdl_sharp
 {
-    public class youtube_dl_wrapper
+    public class ytdl
     {
         public List<dl_item> urls { get; private set; } = new List<dl_item>();
         public string proxy { get; set; } = "";
@@ -24,6 +24,7 @@ namespace ytdui
             start_download(d);
             Debug.WriteLine(proxy);
         }
+
         public async void add_async(string url)
         {
             Debug.WriteLine($"Adding '{url}' to downloadlist.");
@@ -128,6 +129,17 @@ namespace ytdui
         }
         #endregion
     }
+
+    #region dl_EventArgs
+    public class dl_EventArgs : EventArgs
+    {
+        public dl_item ea_dl_item { get; private set; }
+        public dl_EventArgs(dl_item i)
+        {
+            ea_dl_item = i;
+        }
+    }
+    #endregion
 
     #region dl_item defintion
     public class dl_item

@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ytdui", "ytdui\ytdui.csproj", "{C21DC243-EC8F-4AED-9025-E125B7E0745D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{50229724-F730-4356-826E-11217B6AA1C6} = {50229724-F730-4356-826E-11217B6AA1C6}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ytdl_sharp", "ytdl\ytdl_sharp.csproj", "{50229724-F730-4356-826E-11217B6AA1C6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{C21DC243-EC8F-4AED-9025-E125B7E0745D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C21DC243-EC8F-4AED-9025-E125B7E0745D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C21DC243-EC8F-4AED-9025-E125B7E0745D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{50229724-F730-4356-826E-11217B6AA1C6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{50229724-F730-4356-826E-11217B6AA1C6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{50229724-F730-4356-826E-11217B6AA1C6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{50229724-F730-4356-826E-11217B6AA1C6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
