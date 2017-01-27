@@ -11,15 +11,15 @@ namespace ytdl_sharp
 {
     public class ytdl_Item
     {
-        public string exec = "youtube-dl.exe";
+        private string exec = "youtube-dl.exe";
         public string url;
-        public string filename;
+        public string filename { get; private set; }
         public string param;
-        public List<string> output;
-        public ytdl_State status;
+        public List<string> output { get; private set; }
+        public ytdl_State status { get; private set; }
 
-        #region Constructors
-        public ytdl_Item(string uri)
+    #region Constructors
+    public ytdl_Item(string uri)
         {
             url = uri;
             filename = "";
@@ -52,26 +52,38 @@ namespace ytdl_sharp
             cmd.StartInfo.FileName = exec;
             cmd.StartInfo.RedirectStandardInput = true;
             cmd.StartInfo.RedirectStandardOutput = true;
+            cmd.StartInfo.RedirectStandardError = true;
             cmd.StartInfo.CreateNoWindow = true;
             cmd.StartInfo.UseShellExecute = false;
-            cmd.Exited += (s, ea) => ret.SetResult(cmd.ExitCode);
-            //cmd.OutputDataReceived += (s, ea) => Debug.WriteLine(ea.Data);
+            cmd.EnableRaisingEvents = true;
+            cmd.Exited += (s, ea) => {
+                ret.SetResult(cmd.ExitCode);
+                cmd.Dispose();
+            };
+            #region DEBUG
+            #if DEBUG
+                cmd.OutputDataReceived += (s, ea) => Debug.WriteLine(ea.Data);
+                cmd.ErrorDataReceived += (s, ea) => Debug.WriteLine(ea.Data);
+            #endif
+            #endregion
             cmd.OutputDataReceived += (s, ea) => output.Add(ea.Data);
+            cmd.ErrorDataReceived += (s, ea) => output.Add(ea.Data);
             if (param == "")
             {
                 cmd.StartInfo.Arguments = url;
             }
             else
             {
-                cmd.StartInfo.Arguments = $"{param} {url}";
+                cmd.StartInfo.Arguments = $"{param} \"{url}\"";
             }
             cmd.Start();
+            cmd.BeginErrorReadLine();
             cmd.BeginOutputReadLine();
             await ret.Task;
             //cmd.WaitForExit();
             return ret.Task.Result;
         }
-        #endregion
+       #endregion
 
         public override string ToString()
         {

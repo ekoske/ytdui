@@ -68,7 +68,9 @@ namespace ytdui
                 ytdl_Item t = (sender as ListBox).SelectedValue as ytdl_Item;
                 listBox2.DataSource = null;
                 listBox2.DataSource = t.output;
-            } catch { }
+            } catch {
+                Debug.WriteLine("EXEPTION: listBox1_SelectedIndexChanged");
+            }
             Debug.WriteLine(sender.ToString());
         }
 

@@ -26,6 +26,8 @@ namespace ytdl_sharp
             Debug.WriteLine(proxy);
         }
 
+
+        #region Old_stuff
         //public async void add_async(string url)
         //{
         //    Debug.WriteLine($"Adding '{url}' to downloadlist.");
@@ -66,81 +68,6 @@ namespace ytdl_sharp
         //        d.status &= ~ytdl_State.running;
         //        running_threads--;
         //    }
-        //}
-
-        #region Old_stuff
-
-        //#region Download async
-        //private async Task<int> download_async(ytdl_Item d)
-        //{
-        //    TaskCompletionSource<int> ret = new TaskCompletionSource<int>();
-        //    Process cmd = new Process();
-        //    cmd.StartInfo.FileName = "youtube-dl.exe";
-        //    cmd.StartInfo.RedirectStandardInput = true;
-        //    cmd.StartInfo.RedirectStandardOutput = true;
-        //    cmd.StartInfo.CreateNoWindow = true;
-        //    cmd.StartInfo.UseShellExecute = false;
-        //    cmd.Exited += (s, ea) => ret.SetResult(cmd.ExitCode);
-        //    cmd.OutputDataReceived += (s, ea) => Debug.WriteLine(ea.Data);
-        //    if (proxy == "")
-        //    {
-        //        cmd.StartInfo.Arguments = d.url;
-        //    }
-        //    else
-        //    {
-        //        cmd.StartInfo.Arguments = $"--proxy {proxy} {d.url}";
-        //    }
-        //    cmd.Start();
-        //    cmd.BeginOutputReadLine();
-        //    await ret.Task;
-        //    return ret.Task.Result;
-        //}
-        //#endregion
-
-        //#region Download not async
-        //public int download(ytdl_Item d)
-        //{
-        //    int ret = 0;
-        //    Process cmd = new Process();
-        //    cmd.StartInfo.FileName = "youtube-dl.exe";
-        //    cmd.StartInfo.RedirectStandardInput = true;
-        //    cmd.StartInfo.RedirectStandardOutput = true;
-        //    cmd.StartInfo.CreateNoWindow = true;
-        //    //cmd.StartInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-        //    cmd.StartInfo.UseShellExecute = false;
-        //    if (proxy == "")
-        //    {
-        //        cmd.StartInfo.Arguments = d.url;
-        //    }
-        //    else
-        //    {
-        //        cmd.StartInfo.Arguments = $"--proxy {proxy} {d.url}";
-        //    }
-        //    cmd.Start();
-        //    StreamReader sr = cmd.StandardOutput;
-        //    while (!sr.EndOfStream)
-        //    {
-        //        String s = sr.ReadLine();
-        //        if (s != "")
-        //        {
-        //            Debug.WriteLine(s);
-        //            d.output.Add(s);
-        //        }
-        //    }
-        //    sr.ReadToEnd();
-        //    cmd.WaitForExit();
-        //    if (cmd.ExitCode != 0) ret = cmd.ExitCode;
-        //    return ret;
-        //}
-        //#endregion
-
-        //public void add(string url)
-        //{
-        //    Debug.WriteLine($"Adding '{url}' to downloadlist.");
-        //    ytdl_Item d = new ytdl_Item(url);
-        //    urls.Add(d);
-        //    start_download(d);
-        //    Debug.WriteLine(proxy);
         //}
         #endregion
     }
