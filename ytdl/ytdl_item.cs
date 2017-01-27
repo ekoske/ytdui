@@ -5,7 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using System.IO;
-
+using System.ComponentModel;
+using System.Collections.ObjectModel;
 
 namespace ytdl_sharp
 {
@@ -16,17 +17,20 @@ namespace ytdl_sharp
         public string filename { get; private set; }
         public string param;
         public List<string> output { get; private set; }
+
         public ytdl_State status { get; private set; }
 
-    #region Constructors
-    public ytdl_Item(string uri)
+        public event EventHandler<ytdl_Item_EventArgs> OutputChangedEventHandler;
+
+        #region Constructors
+        public ytdl_Item(string uri)
         {
             url = uri;
             filename = "";
             param = "";
             status = ytdl_State.notstarted;
             output = new List<string>();
-            #if(DEBUG)
+#if (DEBUG)
             output.Add($"Starte youtube-dl für '{uri}'...");
             #endif
         }
@@ -37,11 +41,8 @@ namespace ytdl_sharp
         {
             status &= ~ytdl_State.notstarted;
             status |= ytdl_State.running;
-            int r = await download_async();
-            if (r != 0)
-            {
-                status |= ytdl_State.error;
-            }
+            int ret = await download_async();
+            if (ret != 0) status |= ytdl_State.error;
             status &= ~ytdl_State.running;
         }
 
@@ -64,10 +65,16 @@ namespace ytdl_sharp
             #if DEBUG
                 cmd.OutputDataReceived += (s, ea) => Debug.WriteLine(ea.Data);
                 cmd.ErrorDataReceived += (s, ea) => Debug.WriteLine(ea.Data);
-            #endif
+#endif
             #endregion
-            cmd.OutputDataReceived += (s, ea) => output.Add(ea.Data);
-            cmd.ErrorDataReceived += (s, ea) => output.Add(ea.Data);
+            cmd.OutputDataReceived += (s, ea) => output_add(ea.Data);
+            //cmd.OutputDataReceived += (s, ea) =>
+            //{
+                //output.Add(ea.Data);
+                //OnOutputChanged(new ytdl_Item_EventArgs(this));
+            //};
+            //cmd.ErrorDataReceived += (s, ea) => output.Add(ea.Data);
+            cmd.ErrorDataReceived += (s, ea) => output_add(ea.Data);
             if (param == "")
             {
                 cmd.StartInfo.Arguments = url;
@@ -83,7 +90,27 @@ namespace ytdl_sharp
             //cmd.WaitForExit();
             return ret.Task.Result;
         }
-       #endregion
+        #endregion
+
+        protected void output_add(string s)
+        {
+            output.Add(s);
+            //OnOutputChanged(new ytdl_Item_EventArgs(this));
+            if (OutputChangedEventHandler != null)
+            {
+                OutputChangedEventHandler(this, new ytdl_Item_EventArgs(this));
+            }
+
+        }
+
+        protected void OnOutputChanged(ytdl_Item_EventArgs e)
+        {
+            if (OutputChangedEventHandler != null)
+            {
+                OutputChangedEventHandler(this, e);
+            }
+        }
+
 
         public override string ToString()
         {
@@ -92,12 +119,12 @@ namespace ytdl_sharp
     }
 
     #region ytdl_EventArgs
-    public class ytdl_EventArgs : EventArgs
+    public class ytdl_Item_EventArgs : EventArgs
     {
-        public ytdl_Item ea_dl_item { get; private set; }
-        public void dl_EventArgs(ytdl_Item i)
+        public ytdl_Item ytdl_item { get; private set; }
+        public ytdl_Item_EventArgs(ytdl_Item i)
         {
-            ea_dl_item = i;
+            ytdl_item = i;
         }
     }
     #endregion

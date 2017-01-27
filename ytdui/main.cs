@@ -16,6 +16,7 @@ namespace ytdui
     public partial class main : Form
     {
         ytdl dl = new ytdl();
+        ytdl_Item last_selected;
 
         #region Test Kram
         string[] test_links = new string[] {
@@ -66,12 +67,27 @@ namespace ytdui
             try
             {
                 ytdl_Item t = (sender as ListBox).SelectedValue as ytdl_Item;
-                listBox2.DataSource = null;
-                listBox2.DataSource = t.output;
+                if (t != last_selected)
+                { 
+                    if (last_selected != null) last_selected.OutputChangedEventHandler -= OutputChangedEvent;
+                    last_selected = t;
+                    if(t.status.HasFlag(ytdl_State.running)) t.OutputChangedEventHandler += OutputChangedEvent;
+                    listBox2.DataSource = null;
+                    listBox2.DataSource = t.output;
+                }
             } catch {
                 Debug.WriteLine("EXEPTION: listBox1_SelectedIndexChanged");
             }
-            Debug.WriteLine(sender.ToString());
+            //Debug.WriteLine(sender.ToString());
+        }
+
+        public void OutputChangedEvent(object s, ytdl_Item_EventArgs e)
+        {
+            listBox2.Invoke((MethodInvoker)(() => {
+                listBox2.DataSource = null;
+                listBox2.DataSource = e.ytdl_item.output;
+                //listBox2.DataSource = s.output;
+            }));
         }
 
         private void button2_Click(object sender, EventArgs e)
