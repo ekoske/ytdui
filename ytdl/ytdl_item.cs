@@ -16,11 +16,11 @@ namespace ytdl_sharp
         public string url;
         public string filename { get; private set; }
         public string param;
+        public ytdl_State status { get; private set; } = ytdl_State.notstarted;
         public List<string> output { get; private set; }
 
-        public ytdl_State status { get; private set; }
-
-        public event EventHandler<ytdl_Item_EventArgs> OutputChangedEventHandler;
+        public event EventHandler<EventArgs> OutputChangedEventHandler;
+        public event EventHandler<EventArgs> StatusChangedEventHandler;
 
         #region Constructors
         public ytdl_Item(string uri)
@@ -41,9 +41,11 @@ namespace ytdl_sharp
         {
             status &= ~ytdl_State.notstarted;
             status |= ytdl_State.running;
+            StatusChanged();
             int ret = await download_async();
             if (ret != 0) status |= ytdl_State.error;
             status &= ~ytdl_State.running;
+            StatusChanged();
         }
 
         private async Task<int> download_async()
@@ -68,12 +70,6 @@ namespace ytdl_sharp
 #endif
             #endregion
             cmd.OutputDataReceived += (s, ea) => output_add(ea.Data);
-            //cmd.OutputDataReceived += (s, ea) =>
-            //{
-                //output.Add(ea.Data);
-                //OnOutputChanged(new ytdl_Item_EventArgs(this));
-            //};
-            //cmd.ErrorDataReceived += (s, ea) => output.Add(ea.Data);
             cmd.ErrorDataReceived += (s, ea) => output_add(ea.Data);
             if (param == "")
             {
@@ -87,30 +83,30 @@ namespace ytdl_sharp
             cmd.BeginErrorReadLine();
             cmd.BeginOutputReadLine();
             await ret.Task;
-            //cmd.WaitForExit();
             return ret.Task.Result;
         }
         #endregion
 
+        #region Events
         protected void output_add(string s)
         {
+            EventHandler<EventArgs> eh = OutputChangedEventHandler;
             output.Add(s);
-            //OnOutputChanged(new ytdl_Item_EventArgs(this));
-            if (OutputChangedEventHandler != null)
+            if (eh != null)
             {
-                OutputChangedEventHandler(this, new ytdl_Item_EventArgs(this));
+                eh(this, new EventArgs());
             }
-
         }
 
-        protected void OnOutputChanged(ytdl_Item_EventArgs e)
+        protected void StatusChanged()
         {
-            if (OutputChangedEventHandler != null)
+            EventHandler<EventArgs> eh = StatusChangedEventHandler;
+            if (eh != null)
             {
-                OutputChangedEventHandler(this, e);
+                eh(this, new EventArgs());
             }
         }
-
+        #endregion
 
         public override string ToString()
         {

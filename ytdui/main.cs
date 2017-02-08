@@ -22,7 +22,9 @@ namespace ytdui
         string[] test_links = new string[] {
             "http://www.vevo.com/watch/bebe-rexha/I-Got-You/USWBV1600722",
             "https://www.youtube.com/watch?v=6Mgqbai3fKo",
+            "http://www.vevo.com/watch/little-mix/Touch-(Official-Video)/GB1101602128",
             "https://www.youtube.com/watch?v=IcoqJCJlHbQ",
+            "http://www.vevo.com/watch/zara-larsson/So-Good-(Official-Video)/USSM21700037",
             "https://www.youtube.com/watch?v=gBAfejjUQoA"};
         #endregion
 
@@ -39,14 +41,15 @@ namespace ytdui
             dl.proxy = ytdui.Properties.Settings.Default.proxy;
             dl.max_threads = Properties.Settings.Default.max_threads;
             dl.download_folder = Properties.Settings.Default.directory;
+            dl.ListChangedEventHandler += ListChangedEvent;
             textBox1.Text = dl.proxy;
         }
 
-        private void refresh()
-        {
-            listBox1.DataSource = null;
-            listBox1.DataSource = dl.urls;
-        }
+        //private void refresh()
+        //{
+        //    listBox1.DataSource = null;
+        //    listBox1.DataSource = dl.urls;
+        //}
 
         private void init_app_test()
         {
@@ -59,7 +62,7 @@ namespace ytdui
             {
                 dl.add(comboBox1.Text);
             }
-            refresh();
+            //refresh();
         }
 
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
@@ -81,12 +84,22 @@ namespace ytdui
             //Debug.WriteLine(sender.ToString());
         }
 
-        public void OutputChangedEvent(object s, ytdl_Item_EventArgs e)
+        public void OutputChangedEvent(object sender, EventArgs e)
         {
             listBox2.Invoke((MethodInvoker)(() => {
                 listBox2.DataSource = null;
-                listBox2.DataSource = e.ytdl_item.output;
-                //listBox2.DataSource = s.output;
+                listBox2.DataSource = (sender as ytdl_Item).output;
+            }));
+        }
+
+        public void ListChangedEvent(object sender, EventArgs e)
+        {
+            listBox1.Invoke((MethodInvoker)(() => {
+                listBox1.DataSource = null;
+                listBox1.DataSource = dl.urls;
+            }));
+            toolStrip1.Invoke((MethodInvoker)(() => {
+                toolStripStatusLabel1.Text = dl.running_threads.ToString();
             }));
         }
 
@@ -94,7 +107,7 @@ namespace ytdui
         {
             button2.Enabled = false;
             foreach (string i in test_links) dl.add(i);
-            refresh();
+            //refresh();
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
