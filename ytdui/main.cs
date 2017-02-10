@@ -17,7 +17,7 @@ namespace ytdui
     {
         ytdl dl = new ytdl();
         ytdl_Item last_selected;
-
+        ClipboardMonitor clip=new ClipboardMonitor();
         #region Test Kram
         string[] test_links = new string[] {
             "http://www.vevo.com/watch/bebe-rexha/I-Got-You/USWBV1600722",
@@ -33,6 +33,9 @@ namespace ytdui
             InitializeComponent();
             init_app();
             init_app_test();
+            //clip = new ClipboardMonitor();
+            //this.Controls.Add(clip);
+            clip.ClipboardChangedEventHandler += ClipboardChangedEvent;
         }
 
         private void init_app()
@@ -43,6 +46,16 @@ namespace ytdui
             dl.download_folder = Properties.Settings.Default.directory;
             dl.ListChangedEventHandler += ListChangedEvent;
             textBox1.Text = dl.proxy;
+            if (clip.enabled)
+            {
+                offToolStripMenuItem1.Checked = true;
+                onToolStripMenuItem1.Checked = false;
+            }
+            else
+            {
+                offToolStripMenuItem1.Checked = false;
+                onToolStripMenuItem1.Checked = true;
+            }
         }
 
         //private void refresh()
@@ -103,6 +116,20 @@ namespace ytdui
             }));
         }
 
+        public void ClipboardChangedEvent(object sender,ClipboardChangedEventArgs e)
+        {
+            if (e.DataObject.GetDataPresent(DataFormats.Text))
+            {
+                string text = (string)e.DataObject.GetData(DataFormats.Text);
+                comboBox1.Invoke((MethodInvoker)(() => {
+                    comboBox1.Text = text;
+                    dl.add(text);
+                }));
+                Debug.WriteLine(text);
+            }
+
+        }
+
         private void button2_Click(object sender, EventArgs e)
         {
             button2.Enabled = false;
@@ -116,6 +143,41 @@ namespace ytdui
             ytdui.Properties.Settings.Default.proxy = textBox1.Text;
             ytdui.Properties.Settings.Default.Save();
 
+        }
+
+        private void einfügenToolStripButton_Click(object sender, EventArgs e)
+        {
+            //einfügenToolStripButton.
+        }
+
+        private void onToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            offToolStripMenuItem1.Checked = false;
+            onToolStripMenuItem1.Checked = true;            
+            clip.enabled = true;
+        }
+
+        private void offToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            offToolStripMenuItem1.Checked = true;
+            onToolStripMenuItem1.Checked = false;
+            clip.enabled = false;
+        }
+
+        private void einfügenToolStripButton_ButtonClick(object sender, EventArgs e)
+        {
+            //einfügenToolStripMenuItem.ShowDropDown();
+            einfügenToolStripMenuItem.ShowDropDown();
+            if(clip.enabled)
+            {
+                offToolStripMenuItem1.Checked = true;
+                onToolStripMenuItem1.Checked = false;
+                clip.enabled = false;
+            } else {
+                offToolStripMenuItem1.Checked = false;
+                onToolStripMenuItem1.Checked = true;
+                clip.enabled = true;
+            }
         }
     }
 }

@@ -15,7 +15,7 @@ namespace ytdl_sharp
         private string exec = "youtube-dl.exe";
         public string url;
         public string filename { get; private set; }
-        public string param;
+        public string param="-f 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best' --no-call-home --ignore-errors --user-agent 'Mozilla/5.0 (compatible; MSIE 9.0; Windows NT 6.2; WOW64; Trident/6.0)'";
         public ytdl_State status { get; private set; } = ytdl_State.notstarted;
         public List<string> output { get; private set; }
 

@@ -70,7 +70,6 @@
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.ausschneidenToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.kopierenToolStripButton = new System.Windows.Forms.ToolStripButton();
-            this.einfügenToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
             this.hilfeToolStripButton = new System.Windows.Forms.ToolStripButton();
             this.panel1 = new System.Windows.Forms.Panel();
@@ -83,6 +82,10 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.einfügenToolStripButton = new System.Windows.Forms.ToolStripSplitButton();
+            this.onToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.offToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.clipboardMonitor1 = new ytdui.ClipboardMonitor();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
@@ -424,15 +427,6 @@
             this.kopierenToolStripButton.Size = new System.Drawing.Size(23, 22);
             this.kopierenToolStripButton.Text = "&Kopieren";
             // 
-            // einfügenToolStripButton
-            // 
-            this.einfügenToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.einfügenToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("einfügenToolStripButton.Image")));
-            this.einfügenToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.einfügenToolStripButton.Name = "einfügenToolStripButton";
-            this.einfügenToolStripButton.Size = new System.Drawing.Size(23, 22);
-            this.einfügenToolStripButton.Text = "&Einfügen";
-            // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
@@ -536,11 +530,50 @@
             this.label2.TabIndex = 12;
             this.label2.Text = "TEST: ProxyString ";
             // 
+            // einfügenToolStripButton
+            // 
+            this.einfügenToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.einfügenToolStripButton.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.onToolStripMenuItem1,
+            this.offToolStripMenuItem1});
+            this.einfügenToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("einfügenToolStripButton.Image")));
+            this.einfügenToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.einfügenToolStripButton.Name = "einfügenToolStripButton";
+            this.einfügenToolStripButton.Size = new System.Drawing.Size(32, 22);
+            this.einfügenToolStripButton.Text = "&Einfügen";
+            this.einfügenToolStripButton.ButtonClick += new System.EventHandler(this.einfügenToolStripButton_ButtonClick);
+            this.einfügenToolStripButton.Click += new System.EventHandler(this.einfügenToolStripButton_Click);
+            // 
+            // onToolStripMenuItem1
+            // 
+            this.onToolStripMenuItem1.Checked = true;
+            this.onToolStripMenuItem1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.onToolStripMenuItem1.Name = "onToolStripMenuItem1";
+            this.onToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.onToolStripMenuItem1.Text = "On";
+            this.onToolStripMenuItem1.Click += new System.EventHandler(this.onToolStripMenuItem1_Click);
+            // 
+            // offToolStripMenuItem1
+            // 
+            this.offToolStripMenuItem1.Name = "offToolStripMenuItem1";
+            this.offToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.offToolStripMenuItem1.Text = "Off";
+            this.offToolStripMenuItem1.Click += new System.EventHandler(this.offToolStripMenuItem1_Click);
+            // 
+            // clipboardMonitor1
+            // 
+            this.clipboardMonitor1.Location = new System.Drawing.Point(1170, 105);
+            this.clipboardMonitor1.Name = "clipboardMonitor1";
+            this.clipboardMonitor1.Size = new System.Drawing.Size(10, 10);
+            this.clipboardMonitor1.TabIndex = 13;
+            this.clipboardMonitor1.Text = "clipboardMonitor1";
+            // 
             // main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1192, 557);
+            this.Controls.Add(this.clipboardMonitor1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label1);
@@ -609,7 +642,6 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripButton ausschneidenToolStripButton;
         private System.Windows.Forms.ToolStripButton kopierenToolStripButton;
-        private System.Windows.Forms.ToolStripButton einfügenToolStripButton;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
         private System.Windows.Forms.ToolStripButton hilfeToolStripButton;
         private System.Windows.Forms.Panel panel1;
@@ -624,6 +656,10 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label2;
+        private ClipboardMonitor clipboardMonitor1;
+        private System.Windows.Forms.ToolStripSplitButton einfügenToolStripButton;
+        private System.Windows.Forms.ToolStripMenuItem onToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem offToolStripMenuItem1;
     }
 }
 
