@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Diagnostics;
 using System.Security;
+using System.Text.RegularExpressions;
 using ytdl_sharp;
 
 namespace ytdui
@@ -121,10 +122,14 @@ namespace ytdui
             if (e.DataObject.GetDataPresent(DataFormats.Text))
             {
                 string text = (string)e.DataObject.GetData(DataFormats.Text);
-                comboBox1.Invoke((MethodInvoker)(() => {
-                    comboBox1.Text = text;
-                    dl.add(text);
-                }));
+                Regex http= new Regex(@"^https?:\/\/");
+                if (http.Match(text).Success)
+                {
+                    comboBox1.Invoke((MethodInvoker)(() => {
+                        comboBox1.Text = text;
+                        dl.add(text);
+                    }));
+                }
                 Debug.WriteLine(text);
             }
 

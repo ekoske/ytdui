@@ -68,9 +68,9 @@ namespace ytdl_sharp
         public void StatusChangedEvent(object sender, EventArgs e)
         {
             ytdl_Item t = (sender as ytdl_Item);
-            if (t.status == 0)
+            if (t.status == 0 || t.status.HasFlag(ytdl_State.error))
             {
-                Debug.WriteLine($"Status 0: {t.url}");
+                Debug.WriteLine($"Status {t.status}: {t.url}");
                 t.StatusChangedEventHandler-= StatusChangedEvent;
                 running_threads--;
                 next(); //### Exeption ###
